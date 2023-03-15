@@ -1,9 +1,9 @@
 # renovate: datasource=npm depName=renovate versioning=npm
-ARG RENOVATE_VERSION=34.157.1
+ARG RENOVATE_VERSION=35.6.0
 
 # Base image
 #============
-FROM ghcr.io/containerbase/buildpack:6.3.4@sha256:31dbe48cde0308c1adfdd2c5820522c15a863c9d49ebcd210f118addcffe1a01 AS base
+FROM ghcr.io/containerbase/buildpack:6.4.1@sha256:5287de90729b6d0dd8586ead10cab7a6df7de68885ee4f2788c3dc0f66dd0e50 AS base
 
 LABEL name="renovate"
 LABEL org.opencontainers.image.source="https://github.com/renovatebot/renovate" \
@@ -14,7 +14,10 @@ LABEL org.opencontainers.image.source="https://github.com/renovatebot/renovate" 
 RUN prepare-tool all
 
 # renovate: datasource=node
-RUN install-tool node v16.19.1
+RUN install-tool node v18.15.0
+
+# renovate: datasource=npm versioning=npm
+RUN install-tool npm 9.6.1
 
 # renovate: datasource=npm versioning=npm
 RUN install-tool yarn 1.22.19
@@ -22,16 +25,16 @@ RUN install-tool yarn 1.22.19
 WORKDIR /usr/src/app
 
 # renovate: datasource=docker versioning=docker
-RUN install-tool docker 20.10.23
+RUN install-tool docker 23.0.1
 
 # renovate: datasource=adoptium-java
 RUN install-tool java 17.0.6+10
 
 # renovate: datasource=gradle-version versioning=gradle
-RUN install-tool gradle 7.6.1
+RUN install-tool gradle 8.0.2
 
 # renovate: datasource=github-releases lookupName=containerbase/erlang-prebuild versioning=docker
-RUN install-tool erlang 25.2.3.0
+RUN install-tool erlang 25.3.0.0
 
 # renovate: datasource=docker versioning=docker
 RUN install-tool elixir 1.14.3
@@ -43,13 +46,13 @@ RUN install-tool php 8.2.3
 RUN install-tool composer 2.5.4
 
 # renovate: datasource=golang-version
-RUN install-tool golang 1.20.1
+RUN install-tool golang 1.20.2
 
 # renovate: datasource=github-releases lookupName=containerbase/python-prebuild
-RUN install-tool python 3.11.1
+RUN install-tool python 3.11.2
 
 # renovate: datasource=pypi
-RUN install-pip pipenv 2022.12.19
+RUN install-pip pipenv 2023.2.18
 
 # renovate: datasource=github-releases lookupName=python-poetry/poetry
 RUN install-tool poetry 1.4.0
@@ -61,28 +64,28 @@ RUN install-pip hashin 0.17.0
 RUN install-pip pip-tools 6.12.3
 
 # renovate: datasource=docker versioning=docker
-RUN install-tool rust 1.67.1
+RUN install-tool rust 1.68.0
 
 # renovate: datasource=github-releases lookupName=containerbase/ruby-prebuild
 RUN install-tool ruby 3.2.1
 
 # renovate: datasource=rubygems versioning=ruby
-RUN install-tool bundler 2.4.7
+RUN install-tool bundler 2.4.8
 
 # renovate: datasource=rubygems versioning=ruby
 RUN install-tool cocoapods 1.12.0
 
 # renovate: datasource=docker lookupName=mcr.microsoft.com/dotnet/sdk
-RUN install-tool dotnet 6.0.406
+RUN install-tool dotnet 7.0.202
 
 # renovate: datasource=npm versioning=npm
-RUN install-tool pnpm 7.28.0
+RUN install-tool pnpm 7.29.1
 
 # renovate: datasource=npm versioning=npm
 RUN install-npm lerna 6.5.1
 
 # renovate: datasource=github-releases lookupName=helm/helm
-RUN install-tool helm v3.11.1
+RUN install-tool helm v3.11.2
 
 # renovate: datasource=github-releases lookupName=jsonnet-bundler/jsonnet-bundler
 RUN install-tool jb v0.5.1
