@@ -11,6 +11,7 @@ on:
 permissions:
   contents: read
   id-token: write
+  packages: write
 
 jobs:
   build:
@@ -18,17 +19,27 @@ jobs:
     timeout-minutes: 60
 
     steps:
-      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
 
-      - uses: sigstore/cosign-installer@c3667d99424e7e6047999fb6246c0da843953c65 # v3.0.1
+      - uses: sigstore/cosign-installer@dd6b2e2b610a11fd73dd187a43d57cc1394e35f9 # v3.0.5
 
       - name: Docker registry login
-        if: ${{github.ref == 'refs/heads/main'}}
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+        if: github.ref == 'refs/heads/main'
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
 
-      - name: Build and Publish
-        uses: renovatebot/internal-tools@c1d6f949a65c2388101e357ff36d7b960ae1735f # v1.15.7
+      - name: Build and Publish to docker.io
+        uses: containerbase/internal-tools@93bc8de531a89fc87d265fb2dc09d9a837978ea2 # v1.17.7
         with:
           command: docker-builder
+          last-only: true
+          dry-run: ${{github.ref != 'refs/heads/main'}}
+
+      - name: Build and Publish to ghcr.io
+        uses: containerbase/internal-tools@93bc8de531a89fc87d265fb2dc09d9a837978ea2 # v1.17.7
+        with:
+          command: docker-builder
+          image-prefix: ghcr.io/${{ github.repository_owner }}
           last-only: true
           dry-run: ${{github.ref != 'refs/heads/main'}}
